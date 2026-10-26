@@ -1,62 +1,72 @@
-window._DEBUGMODE = true;
+/**
+ * @typedef {Object} Incidente
+ * @property {number} id - Identificador del incidente.
+ * @property {string} descripcion - Descripción del suceso.
+ * @property {number} gravedad - Nivel de gravedad del 1 al 5 (alerta máxima).
+ * @property {boolean} resuelta - Estado de resolución del incidente.
+ */
 
-const loteIncidentes = [
-    { id: 101, descripcion: "Gato atrapado en un árbol", gravedad: 1, resuelta: false },
-    { id: 102, descripcion: "Falsa alarma de humo en local", gravedad: 2, resuelta: true },
-    { id: 103, descripcion: "Incendio estructural en bloque de viviendas", gravedad: 5, resuelta: false },
-    { id: 104, descripcion: "Contenedor ardiendo en la vía pública", gravedad: 3, resuelta: false },
-    { id: 105, descripcion: "Inundación leve de un sótano", gravedad: 2, resuelta: true },
-    { id: 106, descripcion: "Accidente de tráfico múltiple en la A-4", gravedad: 5, resuelta: false },
-    { id: 107, descripcion: "Rescate en ascensor bloqueado", gravedad: 2, resuelta: false }
-];
-
-let recursos = 4;
-
-for (let i = 0; i < loteIncidentes.length; i++) {
-    if (loteIncidentes[i].resuelta) {
-        continue;
+/**
+ * Procesa un incidente individual asignándole los recursos disponibles si cumple los criterios.
+ *
+ * @param {Incidente} incidente - El objeto incidente a evaluar.
+ * @param {number} recursosDisponibles - Cantidad actual de recursos disponibles en el sistema.
+ * @returns {{ exito: boolean, recursosRestantes: number }} Objeto con el resultado de la asignación y los recursos tras la operación.
+ */
+function procesarIncidente(incidente, recursosDisponibles) {
+    if (recursosDisponibles <= 0 || incidente.resuelta) {
+        return { exito: false, recursosRestantes: recursosDisponibles };
     }
 
-    if (loteIncidentes[i].gravedad === 5) {
-        if (window._DEBUGMODE) {
-            console.log(`[ALERTA MÁXIMA] Incidente #${loteIncidentes[i].id}: ${loteIncidentes[i].descripcion}. Se asignan ${recursos} recursos.`);
-        }
-
-        recursos--;
-        loteIncidentes[i].resuelta = true;
-        if (recursos === 0) {
-            if (window._DEBUGMODE) {
-                console.log("No hay recursos disponibles para asignar.");
-            }
-            break;
-        }
+    if (window._DEBUGMODE) {
+        console.log(`[ASIGNACIÓN] Incidente #${incidente.id}: ${incidente.descripcion}. Recursos previos: ${recursosDisponibles}`);
     }
+
+    incidente.resuelta = true;
+    const recursosRestantes = recursosDisponibles - 1;
+
+    return { exito: true, recursosRestantes };
 }
 
-if (recursos > 0) {
-    for (let i = 0; i < loteIncidentes.length; i++) {
-        if (loteIncidentes[i].resuelta) {
-            continue;
-        }
+/**
+ * Ejecuta la asignación priorizada de recursos en dos fases:
+ * 1. Atiende primero incidentes con gravedad máxima (5).
+ * 2. Atiende incidentes restantes (gravedad 1 a 4) si aún quedan recursos.
+ *
+ * @param {Incidente[]} listaIncidentes - Array con el lote completo de incidentes a procesar.
+ * @param {number} recursosIniciales - Número de recursos totales de los que dispone el sistema.
+ * @returns {number} Número de recursos restantes tras finalizar la asignación.
+ */
+function gestionarLoteIncidentes(listaIncidentes, recursosIniciales) {
+    let recursos = recursosIniciales;
 
-        switch (loteIncidentes[i].gravedad) {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                if (window._DEBUGMODE) {
-                    console.log(`[INCIDENTE] Se asignan ${recursos} recursos a: ${loteIncidentes[i].descripcion} (Gravedad: ${loteIncidentes[i].gravedad}).`);
-                }
-                recursos--;
-                loteIncidentes[i].resuelta = true;
-                break;
-        }
+    // FASE 1: Prioridad Alerta Máxima (Gravedad 5)
+    for (let i = 0; i < listaIncidentes.length; i++) {
+        // Punto de interrupción estratégico para depuración
+        debugger;
 
-        if (recursos === 0) {
-            if (window._DEBUGMODE) {
-                console.log("No hay recursos disponibles para asignar.");
-            }
-            break;
+        if (!listaIncidentes[i].resuelta && listaIncidentes[i].gravedad === 5) {
+            const resultado = procesarIncidente(listaIncidentes[i], recursos);
+            recursos = resultado.recursosRestantes;
+
+            if (recursos === 0) break;
         }
     }
+
+    // FASE 2: Incidentes de gravedad menor (1 a 4)
+    if (recursos > 0) {
+        for (let i = 0; i < listaIncidentes.length; i++) {
+            // Punto de interrupción estratégico para depuración
+            debugger;
+
+            if (!listaIncidentes[i].resuelta && listaIncidentes[i].gravedad < 5) {
+                const resultado = procesarIncidente(listaIncidentes[i], recursos);
+                recursos = resultado.recursosRestantes;
+
+                if (recursos === 0) break;
+            }
+        }
+    }
+
+    return recursos;
 }
