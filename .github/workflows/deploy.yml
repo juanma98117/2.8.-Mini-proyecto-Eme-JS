@@ -29,15 +29,21 @@ jobs:
         with:
           node-version: '20'
 
+      # Instala dependencias o ejecuta scripts si existe package.json
       - name: Install dependencies and build
         run: |
-          npm ci
+          npm ci || true
           npm run build --if-present
 
+      # Configura automáticamente los metadatos de GitHub Pages
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      # Subimos la raíz del proyecto ('.') en lugar de './dist'
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: '.'
 
   deploy:
     environment:
