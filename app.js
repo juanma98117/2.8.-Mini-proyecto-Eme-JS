@@ -22,6 +22,8 @@ for(let i=0;i<loteIncidentes.length;i++){
             case 2:
                 console.log();  
                 break;
+            case 3:
+                console.log();
         }
     }
 }
