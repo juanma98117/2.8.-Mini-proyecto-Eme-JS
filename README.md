@@ -1,12 +1,9 @@
 # 📔 Diario de Depuración y Co-Evaluación - Eme-JS
  
- 
-**Equipo:** titozeio(Driver inicial) & smontes-profe (Navigator inicial)
- 
- 
-### 🔍 Captura y Análisis de Variables (Debugger)
-...(5-8 líneas).
- 
- 
-### 👥 Experiencia de Pair Programming
-...(5-8 líneas).
+![Foto1](captura1.png)
+![Foto2](captura2.png)
+![Foto3](captura3.png)
+![Foto4](captura4.png)
+
+Experiencia Juanma
+Mi experiencia ha sido buena, al principio hemos planteado como íbamos a estructurar el código, nos hemos puesto a hacerlo y nos hemos ayudado mutuamente. Parte de que haya sido buena la experiencia es la persona que estaba haciendolo conmigo, Rafa, ha sido muy paciente conmigo.
