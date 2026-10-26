@@ -2,8 +2,8 @@ const _DEBUGMODE = true;
 
 /**
  * @typedef {Object} Incidente
- * @property {number} id Identificador único del incidente.
- * @property {string} descripcion Descripción breve del suceso.
+ * @property {number} id Identificador del incidente.
+ * @property {string} descripcion Descripción del suceso.
  * @property {number} gravedad Nivel de gravedad (1 a 5).
  * @property {boolean} resuelta Estado de resolución del incidente.
  */
@@ -72,7 +72,7 @@ function procesarIncidente(incidente, recursosActuales) {
 }
 
 for (let i = 0; i < loteIncidentes.length; i++) {
-    debugger; // Punto de interrupción condicional para DevTools
+    debugger;
 
     if (loteIncidentes[i].resuelta) {
         continue;
@@ -92,7 +92,7 @@ for (let i = 0; i < loteIncidentes.length; i++) {
 
 if (recursos > 0) {
     for (let i = 0; i < loteIncidentes.length; i++) {
-        debugger; // Punto de interrupción condicional para DevTools
+        debugger;
 
         if (loteIncidentes[i].resuelta) {
             continue;
